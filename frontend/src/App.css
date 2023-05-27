@@ -1,38 +1,52 @@
-.App {
-  text-align: center;
+.App {}
+
+.pac-card {
+  background-color: #fff;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+  padding: 0 0.5em;
+  font: 400 14px Roboto, Arial, sans-serif;
+  overflow: hidden;
+  font-family: Roboto;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#pac-container {
+  padding-bottom: 12px;
+  margin-right: 12px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.pac-input {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 1px 0 13px;
+  text-overflow: ellipsis;
+  width: 400px !important;
+  margin-top: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#pac-input:focus {
+  border-color: #4d90fe;
 }
 
-.App-link {
-  color: #61dafb;
+#pac-input2:focus {
+  border-color: #4d90fe;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#title {
+  color: #fff;
+  background-color: #4d90fe;
+  font-size: 25px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+#map {
+  width: 900px;
+  height: 600px;
 }
