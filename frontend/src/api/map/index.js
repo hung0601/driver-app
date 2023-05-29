@@ -1,4 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader";
+import $ from "jquery";
 const loader = new Loader({
   apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
   version: "weekly",
@@ -28,13 +29,19 @@ function calculateAndDisplayRoute(
       travelMode: mode,
     })
     .then((response) => {
-      directionsRenderer.setDirections(response);
       console.log(response);
+      var distance = response.routes[0].legs[0].distance.value / 1000;
+      distance = distance.toFixed(1);
+      $(".car span").text(distance * 20000);
+      $(".motorbike span").text(distance * 10000);
+      directionsRenderer.setDirections(response);
+      $(".result").show();
     })
     .catch((e) => window.alert("Directions request failed due to " + e));
 }
 
 export const loadMap = () => {
+  $(".result").hide();
   loader.load().then(async (google) => {
     const { Map } = await google.maps.importLibrary("maps");
     const places = await google.maps.importLibrary("places");
@@ -45,6 +52,7 @@ export const loadMap = () => {
       zoom: 13,
       mapTypeControl: false,
     });
+
     directionsRenderer.setMap(map);
     const card = document.getElementById("pac-card");
     const input = document.getElementById("pac-input");
@@ -70,7 +78,7 @@ export const loadMap = () => {
       marker.setVisible(false);
 
       const place = autocomplete.getPlace();
-      console.log(place);
+      // console.log(place);
       if (autocomplete.getPlace() && autocomplete2.getPlace())
         calculateAndDisplayRoute(
           directionsService,
