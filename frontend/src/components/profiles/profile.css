@@ -1,0 +1,182 @@
+.profile-page {
+  /* text-align: center; */
+}
+.profile-page .profile-container {
+  width: 800px;
+  border: 2px #000000;
+  border-style: double;
+  margin: auto;
+  height: auto;
+  /* margin: 100px; */
+}
+.profile-page .profile-content button{
+    /* width: 80px; */
+    font-size: 14px;
+    height: 40px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+.profile-page .container-content {
+  /* margin: 100px; */
+  margin-top: 100px;
+  margin: 100px 150px;
+}
+.profile-page .anh-dai-dien {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border: #000000 2px solid;
+}
+.profile-page .profile-header {
+  display: flex;
+
+  justify-content: space-between;
+}
+.profile-page .profile-title {
+  font-size: 35px;
+  font-weight: bold;
+}
+.profile-page .profile-header-action .button-back {
+  width: 70px;
+  height: 30px;
+  font-size: 15px;
+  font-weight: bold;
+}
+.profile-page .profile-content {
+  /* margin: 30px; */
+  margin-top: 20px;
+}
+.profile-page .profile-content .profile-content-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.profile-page .profile-content .profile-content-container .content-item {
+  margin-left: 20px;
+  display: flex;
+  font-size: 18px;
+
+}
+.profile-page .content-item label{
+    margin: auto 20px;
+    width: 20%;
+}
+.profile-page .profile-footer{
+    margin:40px auto;
+    text-align: center;
+}
+.profile-page .profile-footer button{
+    font-weight: bold;
+    font-size: 20px;
+    width: 180px;
+    height: 50px;
+
+}
+@media only screen and (max-width: 770px){
+    .profile-page .profile-container {
+        width: auto;
+        height: auto;
+        border: 2px #000000;
+        border-style: double;
+        margin: auto;
+        /* margin: 100px; */
+      }
+      .profile-page .container-content {
+        /* margin: 100px; */
+        margin-top: 50px;
+        margin: 50px 100px;
+      }
+      .profile-page .anh-dai-dien {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        border: #000000 2px solid;
+      }
+      .profile-page .profile-title {
+        font-size: 25px;
+        font-weight: bold;
+      }
+      .profile-page .profile-header-action .button-back {
+        width: 70px;
+        height: 30px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .profile-page .profile-content .profile-content-title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .profile-page .profile-content .profile-content-container .content-item {
+        margin-left: 10px;
+        display: flex;
+        font-size: 15px;
+      }
+      .profile-page .profile-footer{
+        margin:20px auto;
+        text-align: center;
+    }
+    .profile-page .profile-content button{
+        /* width: 80px; */
+        font-size: 14px;
+        height: 30px;
+    }
+}
+@media only screen and (max-width: 500px){
+    .profile-page .profile-container {
+        width: auto;
+        height: auto;
+        border: 2px #000000;
+        border-style: double;
+        margin: auto;
+        /* margin: 100px; */
+      }
+      .profile-page .container-content {
+        /* margin: 100px; */
+        margin-top: 50px;
+        margin: 50px 50px;
+      }
+      .profile-page .anh-dai-dien {
+        border-radius: 50%;
+        width: 110px;
+        height: 110px;
+        border: #000000 2px solid;
+      }
+      .profile-page .profile-title {
+        font-size: 25px;
+        font-weight: bold;
+      }
+      .profile-page .profile-header-action .button-back {
+        width: 70px;
+        height: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .profile-page .profile-content .profile-content-title {
+        font-size: 15px;
+        font-weight: bold;
+      }
+      .profile-page .profile-content .profile-content-container .content-item {
+        margin-left: 10px;
+        display: flex;
+        font-size: 12px;
+      }
+      .profile-page .profile-footer{
+        margin:20px auto;
+        text-align: center;
+    }
+    .profile-page .content-item label{
+        margin: auto 20px;
+        width: 25%;
+    }
+    .profile-page .profile-content button{
+        /* width: 80px; */
+        font-size: 12px;
+        height: 22px;
+    }
+    .profile-page .profile-footer button{
+        font-weight: bold;
+        font-size: 18px;
+        width: 120px;
+        height: 40px;
+
+    }
+}

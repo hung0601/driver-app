@@ -1,0 +1,77 @@
+/* Popup style */
+.popup-box-cho-xe {
+  position: fixed;
+  background: #00000050;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+
+.popup-box-cho-xe .box {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+  height: auto;
+  max-height: 80%;
+  margin-top: calc(100vh - 85vh - 20px);
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid #999;
+  overflow: auto;
+}
+
+.close-icon {
+  content: "x";
+  cursor: pointer;
+  position: fixed;
+  right: calc(15% - 30px);
+  top: calc(100vh - 85vh - 33px);
+  background: #ededed;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  line-height: 20px;
+  text-align: center;
+  border: 1px solid #999;
+  font-size: 20px;
+}
+.popup-box-cho-xe .popup-header {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.popup-box-cho-xe .popup-header b {
+  font-size: 30px;
+}
+.popup-box-cho-xe .anh-dai-dien {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  border: #000000 2px solid;
+}
+.popup-box-cho-xe .popup-content-header {
+  text-align: center;
+}
+.popup-box-cho-xe .icon-start {
+  width: 40px;
+  height: 40px;
+}
+.popup-box-cho-xe .popup-content-header p {
+  font-size: 40px;
+  margin: 0;
+}
+.popup-box-cho-xe .popup-content-container {
+  padding-left: 35%;
+  font-weight: bold;
+  font-size: 20px;
+}
+.popup-box-cho-xe .popup-content-footer {
+  text-align: center;
+}
+.popup-box-cho-xe .popup-content-footer button {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+}
