@@ -8,13 +8,44 @@ import {
   CarIcon,
   BikeIcon,
 } from "../asset/icons";
+import axios from "axios";
+import echo from "../service/socket";
+const listenMsg = () => {
+  echo.channel("hello").listen(".message", (event) => {
+    console.log(event);
+  });
+};
+listenMsg();
+setLocation();
 function HomePage() {
   useEffect(() => {
     loadMap();
-    setLocation();
   });
+
+  const sendMessage = () => {
+    var postData = {
+      email: "test@test.com",
+      password: "password",
+    };
+
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post(`http://localhost:8000/api/message`, postData, axiosConfig)
+      .then((res) => {
+        //console.log(res);
+      })
+      .catch((error) => console.log(error));
+  };
   return (
     <div className="App">
+      <div className="sendMessage">
+        <button onClick={sendMessage}>Click me</button>
+      </div>
       <div className="pac-card" id="pac-card">
         <div id="pac-container">
           <div className="input-element">
