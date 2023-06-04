@@ -1,6 +1,7 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import $ from "jquery";
 const loader = new Loader({
+  // apikey: "AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA",
   apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
   version: "weekly",
 });

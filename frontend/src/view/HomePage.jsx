@@ -8,13 +8,11 @@ import {
   CarIcon,
   BikeIcon,
 } from "../asset/icons";
-
 function HomePage() {
   useEffect(() => {
     loadMap();
     setLocation();
   });
-
   return (
     <div className="App">
       <div className="pac-card" id="pac-card">
