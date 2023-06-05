@@ -1,6 +1,6 @@
 import "../App.css";
 import { loadMap, setLocation } from "../api/map";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   CalendarIcon,
   EndIcon,
@@ -26,9 +26,6 @@ function HomePage() {
   const trip = useSelector(selectTrip);
   const [type, setType] = useState(0);
 
-  useEffect(() => {
-    console.log(trip);
-  });
   const handleBikeSelect = () => {
     if (type !== 0) {
       setType(0);
