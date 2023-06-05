@@ -1,23 +1,11 @@
 import "../App.css";
 import { loadMap, setLocation } from "../api/map";
-import { useEffect,useState } from "react";
-// import { Link } from 'react-router-dom';
-//linh
-// import Popup from '../components/popupchoxe/Popup';
+import { useEffect, useState } from "react";
 function HomePage() {
   useEffect(() => {
     loadMap();
     setLocation();
   });
-
-// linh
-// const [isOpen, setIsOpen] = useState(false);
-
-// const togglePopup = () => {
-//   setIsOpen(!isOpen);
-// };
-
-//linh
 
   return (
     <div className="App">
@@ -43,19 +31,6 @@ function HomePage() {
         <br />
         <span id="place-address"></span>
       </div>
-      {/* <div>
-         <input type="button" value="Click to Open Popup" onClick={togglePopup} />
-         {isOpen && (
-        <Popup
-          handleClose={togglePopup}
-        />
-      )}
-      </div>
-      <div>
-        <Link to="/profile">
-          <button>Go to profile page</button>
-        </Link>
-      </div> */}
     </div>
   );
 }
