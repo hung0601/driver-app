@@ -12,14 +12,28 @@ const Popup = props => {
             </div>
             <div className="popup-content">
               <div className="popup-content-header">
-                <img className="anh-dai-dien" src={'https://haycafe.vn/wp-content/uploads/2022/01/Hinh-anh-cute.jpg'}/>
-                <p>5 <img src="https://quocvuongtravel.com/media/upload/hangsx/01121865.png" className="icon-start"/></p>
+                <img className="anh-dai-dien" src={'https://haycafe.vn/wp-content/uploads/2022/01/Hinh-anh-cute.jpg'} alt=""/>
+                <p>5 <img src="https://quocvuongtravel.com/media/upload/hangsx/01121865.png" className="icon-start" alt=""/></p>
               </div>
               <div className="popup-content-container">
-                <p>氏名: Nguyen Van An</p>
-                <p>電話番号: 0112345678</p>
-                <p>ブランド:Mazda</p>
-                <p>プレート: 287-999</p>
+                <div className="popup-content-container-item">
+                  <label>氏名</label>
+                  <p> Nguyen Van An</p>
+                </div>
+                <div className="popup-content-container-item">
+                  <label>電話番号</label>
+                  <p> 0112345678</p>
+                </div>
+                <div className="popup-content-container-item">
+                  <label>ブランド</label>
+                  <p>Mazda</p>
+                </div>
+                <div className="popup-content-container-item">
+                  <label>プレート</label>
+                  <p>287-999</p>
+                </div>
+
+
               </div>
 
             </div>

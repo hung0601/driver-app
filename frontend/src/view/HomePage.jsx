@@ -1,9 +1,9 @@
 import "../App.css";
 import { loadMap, setLocation } from "../api/map";
 import { useEffect,useState } from "react";
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 //linh
-import Popup from '../components/popupchoxe/Popup';
+// import Popup from '../components/popupchoxe/Popup';
 function HomePage() {
   useEffect(() => {
     loadMap();
@@ -11,11 +11,11 @@ function HomePage() {
   });
 
 // linh
-const [isOpen, setIsOpen] = useState(false);
+// const [isOpen, setIsOpen] = useState(false);
 
-const togglePopup = () => {
-  setIsOpen(!isOpen);
-};
+// const togglePopup = () => {
+//   setIsOpen(!isOpen);
+// };
 
 //linh
 
@@ -43,7 +43,7 @@ const togglePopup = () => {
         <br />
         <span id="place-address"></span>
       </div>
-      <div>
+      {/* <div>
          <input type="button" value="Click to Open Popup" onClick={togglePopup} />
          {isOpen && (
         <Popup
@@ -55,7 +55,7 @@ const togglePopup = () => {
         <Link to="/profile">
           <button>Go to profile page</button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }

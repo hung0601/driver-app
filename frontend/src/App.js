@@ -1,7 +1,5 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Profile from "./components/profiles/profile";
 function App() {
   return (
     // <Router>
@@ -25,7 +23,7 @@ function App() {
           Learn React
         </a>
       </header>
-      
+
     </div>
   );
 }

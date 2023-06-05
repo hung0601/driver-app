@@ -39,7 +39,7 @@ function Profile() {
                             <button style={{marginBottom: '20px'}} >アバター変更</button>
                             <div className="" style={{textAlign:'center'}}>
 
-                                <img className="anh-dai-dien" src={'https://haycafe.vn/wp-content/uploads/2022/01/Hinh-anh-cute.jpg'}/>
+                                <img className="anh-dai-dien" src={'https://haycafe.vn/wp-content/uploads/2022/01/Hinh-anh-cute.jpg'} alt=""/>
                             </div>
 
                         </div>
