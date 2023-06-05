@@ -103,6 +103,10 @@
   border-right: 2px solid black;
 }
 
+.hide {
+  display: none;
+}
+
 .type img {
   width: 50px;
 
@@ -146,6 +150,10 @@ label {
   font-weight: 600;
   margin-bottom: 10px;
   margin-top: 10px;
+}
+
+.selected {
+  background-color: aqua;
 }
 
 @media only screen and (max-width: 750px) {

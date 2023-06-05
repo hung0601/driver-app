@@ -1,5 +1,8 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import $ from "jquery";
+import store from "../../store";
+
+import { initTrip } from "../../store/modules/trip";
 const loader = new Loader({
   // apikey: "AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA",
   apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
@@ -8,7 +11,7 @@ const loader = new Loader({
 const position = { lat: 21.021384, lng: 105.8866827 };
 let map;
 const options = {
-  fields: ["formatted_address", "geometry", "name"],
+  fields: ["formatted_address", "geometry", "name", "place_id"],
   componentRestrictions: { country: "vn" },
   strictBounds: false,
   types: [],
@@ -23,26 +26,41 @@ function calculateAndDisplayRoute(
 ) {
   directionsService
     .route({
-      origin: start,
+      origin: { placeId: start.place_id },
 
-      destination: end,
+      destination: { placeId: end.place_id },
 
       travelMode: mode,
     })
     .then((response) => {
-      console.log(response);
       var distance = response.routes[0].legs[0].distance.value / 1000;
+      store.dispatch(
+        initTrip({
+          start: {
+            placeId: start.place_id,
+            name: start.name,
+            address: start.formatted_address,
+            loaction: start.geometry.loaction,
+          },
+          end: {
+            placeId: end.place_id,
+            name: end.name,
+            address: end.formatted_address,
+            loaction: end.geometry.loaction,
+          },
+          route: response.routes[0].legs[0].distance,
+        })
+      );
       distance = distance.toFixed(1);
       $(".car span").text(distance * 20000);
       $(".motorbike span").text(distance * 10000);
       directionsRenderer.setDirections(response);
-      $(".result").show();
+      $(".result").removeClass("hide");
     })
     .catch((e) => window.alert("Directions request failed due to " + e));
 }
 
 export const loadMap = () => {
-  $(".result").hide();
   loader.load().then(async (google) => {
     const { Map } = await google.maps.importLibrary("maps");
     const places = await google.maps.importLibrary("places");
@@ -84,8 +102,8 @@ export const loadMap = () => {
         calculateAndDisplayRoute(
           directionsService,
           directionsRenderer,
-          autocomplete.getPlace().geometry.location,
-          autocomplete2.getPlace().geometry.location,
+          autocomplete.getPlace(),
+          autocomplete2.getPlace(),
           google.maps.TravelMode.DRIVING
         );
       if (!place.geometry || !place.geometry.location) {
@@ -119,8 +137,8 @@ export const loadMap = () => {
         calculateAndDisplayRoute(
           directionsService,
           directionsRenderer,
-          autocomplete.getPlace().geometry.location,
-          autocomplete2.getPlace().geometry.location,
+          autocomplete.getPlace(),
+          autocomplete2.getPlace(),
           google.maps.TravelMode.DRIVING
         );
       if (!place.geometry || !place.geometry.location) {

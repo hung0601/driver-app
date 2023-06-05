@@ -1,6 +1,6 @@
 import "../App.css";
 import { loadMap, setLocation } from "../api/map";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   CalendarIcon,
   EndIcon,
@@ -8,8 +8,12 @@ import {
   CarIcon,
   BikeIcon,
 } from "../asset/icons";
+import { useSelector } from "react-redux";
+import { selectTrip } from "../store/modules/trip";
+import $ from "jquery";
 import axios from "axios";
 import echo from "../service/socket";
+
 const listenMsg = () => {
   echo.channel("hello").listen(".message", (event) => {
     console.log(event);
@@ -17,16 +21,30 @@ const listenMsg = () => {
 };
 listenMsg();
 setLocation();
+loadMap();
 function HomePage() {
-  useEffect(() => {
-    loadMap();
-  });
+  const trip = useSelector(selectTrip);
+  const [type, setType] = useState(0);
 
+  useEffect(() => {
+    console.log(trip);
+  });
+  const handleBikeSelect = () => {
+    if (type !== 0) {
+      setType(0);
+      $("#0").addClass("selected");
+      $("#1").removeClass("selected");
+    }
+  };
+  const handleCarSelect = () => {
+    if (type !== 1) {
+      setType(1);
+      $("#1").addClass("selected");
+      $("#0").removeClass("selected");
+    }
+  };
   const sendMessage = () => {
-    var postData = {
-      email: "test@test.com",
-      password: "password",
-    };
+    var postData = trip;
 
     let axiosConfig = {
       headers: {
@@ -37,15 +55,12 @@ function HomePage() {
     axios
       .post(`http://localhost:8000/api/message`, postData, axiosConfig)
       .then((res) => {
-        //console.log(res);
+        console.log(res);
       })
       .catch((error) => console.log(error));
   };
   return (
     <div className="App">
-      <div className="sendMessage">
-        <button onClick={sendMessage}>Click me</button>
-      </div>
       <div className="pac-card" id="pac-card">
         <div id="pac-container">
           <div className="input-element">
@@ -76,9 +91,13 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className="result">
+      <div className="result hide">
         <div className="driver-type">
-          <div className="motorbike type">
+          <div
+            id="0"
+            onClick={handleBikeSelect}
+            className="motorbike type selected"
+          >
             <div className="discript">
               <img src={BikeIcon} alt="bike icon"></img>
               <h2>バイク</h2>
@@ -87,7 +106,7 @@ function HomePage() {
               <span>30000</span> VND
             </p>
           </div>
-          <div className="car type">
+          <div id="1" onClick={handleCarSelect} className="car type">
             <div className="discript">
               <img src={CarIcon} alt="car icon"></img>
               <h2>車</h2>
@@ -101,7 +120,9 @@ function HomePage() {
           <label htmlFor="code">割合：</label>
           <input name="code" type="text" placeholder="コードを入力"></input>
         </div>
-        <button className="submit-btn">行くよう</button>
+        <button onClick={sendMessage} className="submit-btn">
+          行くよう
+        </button>
       </div>
       <div id="map"></div>
       <div id="infowindow-content">
