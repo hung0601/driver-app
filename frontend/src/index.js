@@ -7,12 +7,13 @@ import reportWebVitals from "./reportWebVitals";
 import { router } from "./routes";
 import store from "./store";
 import { Provider } from "react-redux";
-
+import { MainLayout } from "./component/layout";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
+      <MainLayout />
     </Provider>
   </React.StrictMode>
 );

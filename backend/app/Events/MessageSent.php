@@ -38,8 +38,14 @@ class MessageSent implements ShouldBroadcast
     }
     public function broadcastWith(){
         return [
-            'message' => $this->message,
-            'user'=>$this->user
+            'status'=>1,
+            'data'=>[
+                'name'=>'The Thai',
+                'phone'=>'0999999999',
+                'branch'=>'Honda',
+                'palet'=>'17A2-9999'
+            ]
+            
         ];
     }
     public function broadcastAs()

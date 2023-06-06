@@ -1,5 +1,5 @@
-import "../App.css";
-import { loadMap, setLocation } from "../api/map";
+import "./HomePage.css";
+import { loadMap, setLocation } from "../../api/map";
 import { useState } from "react";
 import {
   CalendarIcon,
@@ -7,24 +7,29 @@ import {
   StartIcon,
   CarIcon,
   BikeIcon,
-} from "../asset/icons";
-import { useSelector } from "react-redux";
-import { selectTrip } from "../store/modules/trip";
+} from "../../asset/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTrip } from "../../store/modules/trip";
 import $ from "jquery";
 import axios from "axios";
-import echo from "../service/socket";
+import echo from "../../service/socket";
+import { Modal } from "antd";
+import { message } from "antd";
 
-const listenMsg = () => {
-  echo.channel("hello").listen(".message", (event) => {
-    console.log(event);
-  });
-};
-listenMsg();
+import { setDriver } from "../../store/modules/trip";
+
+import hourOrderConfig from "../../component/popup/hour_order";
+import driverInfoConfig from "../../component/popup/driver-info";
+import weeklyOrderConfig from "../../component/popup/weekly-order";
+
 setLocation();
 loadMap();
 function HomePage() {
   const trip = useSelector(selectTrip);
   const [type, setType] = useState(0);
+  const [orderType, setOrderType] = useState("0");
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleBikeSelect = () => {
     if (type !== 0) {
@@ -40,21 +45,50 @@ function HomePage() {
       $("#0").removeClass("selected");
     }
   };
-  const sendMessage = () => {
-    var postData = trip;
+  const handleSelectOrderType = (event) => {
+    setOrderType(event.target.value);
+  };
+  const stopListen = () => {
+    echo.channel("hello").stopListening(".message");
+  };
+  const listenMsg = () => {
+    echo.channel("hello").listen(".message", (event) => {
+      if (event.status === 1) {
+        dispatch(setDriver(event.data));
+      }
+      message.destroy();
+      setLoading(false);
+      Modal.info(driverInfoConfig);
+      stopListen();
+    });
+  };
 
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-    axios
-      .post(`http://localhost:8000/api/message`, postData, axiosConfig)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => console.log(error));
+  const sendMessage = () => {
+    switch (orderType) {
+      case "0":
+        var postData = trip;
+        let axiosConfig = {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+        };
+        listenMsg();
+        setLoading(true);
+        message.loading("検索中...");
+        axios
+          .post(`http://localhost:8000/api/message`, postData, axiosConfig)
+          .catch((error) => console.log(error));
+        break;
+      case "1":
+        Modal.confirm(hourOrderConfig);
+        break;
+      case "2":
+        Modal.confirm(weeklyOrderConfig);
+        break;
+      default:
+        break;
+    }
   };
   return (
     <div className="App">
@@ -80,10 +114,15 @@ function HomePage() {
           </div>
           <div className="input-element">
             <img className="icons" src={CalendarIcon} alt="start icons"></img>
-            <select className="pac-input" id="order-type">
-              <option value="1">今すぐ</option>
-              <option value="2">指定日時</option>
-              <option value="3">定期的</option>
+            <select
+              className="pac-input"
+              id="order-type"
+              value={orderType}
+              onChange={handleSelectOrderType}
+            >
+              <option value="0">今すぐ</option>
+              <option value="1">指定日時</option>
+              <option value="2">定期的</option>
             </select>
           </div>
         </div>
@@ -117,9 +156,15 @@ function HomePage() {
           <label htmlFor="code">割合：</label>
           <input name="code" type="text" placeholder="コードを入力"></input>
         </div>
-        <button onClick={sendMessage} className="submit-btn">
-          行くよう
-        </button>
+        {loading ? (
+          <button disabled onClick={sendMessage} className="submit-btn">
+            行くよう
+          </button>
+        ) : (
+          <button onClick={sendMessage} className="submit-btn">
+            行くよう
+          </button>
+        )}
       </div>
       <div id="map"></div>
       <div id="infowindow-content">

@@ -1,0 +1,102 @@
+.popup-box-cho-xe {
+    width: 100%;
+}
+
+.ant-modal-confirm-title {
+    width: 100%;
+}
+
+.popup-box-cho-xe .box {
+    background: #fff;
+
+
+}
+
+.ant-modal-confirm-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ant-modal-confirm-content {
+    width: 100% !important;
+}
+
+.popup-box-cho-xe .anh-dai-dien {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border: #000000 2px solid;
+}
+
+.popup-box-cho-xe .popup-content {
+    text-align: center;
+}
+
+.popup-box-cho-xe .popup-content-header {
+    text-align: center;
+}
+
+.popup-box-cho-xe .icon-start {
+    width: 20px;
+    height: 20px;
+}
+
+.popup-box-cho-xe .popup-content-header p {
+    font-size: 25px;
+    margin: 0;
+}
+
+.popup-box-cho-xe .popup-content-container {
+    font-size: 18px;
+}
+
+.popup-box-cho-xe .popup-content-container-item {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 15px;
+
+}
+
+.popup-box-cho-xe .popup-content-container-item label {
+    width: 45%;
+    font-weight: 600;
+    text-align: left;
+}
+
+.popup-box-cho-xe .popup-content-container-item p {
+    margin-bottom: 0;
+    margin-top: 0;
+    text-align: left;
+    width: 45%;
+}
+
+.popup-box-cho-xe .popup-content-footer {
+    text-align: center;
+}
+
+.popup-box-cho-xe .popup-content-footer button {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.modalTitle {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.modalTitle h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+@media only screen and (max-width: 770px) {
+    .popup-content-container-item {
+        font-size: 16px;
+    }
+
+}

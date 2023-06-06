@@ -99,6 +99,10 @@
 
 }
 
+.type:hover {
+  cursor: pointer;
+}
+
 .motorbike {
   border-right: 2px solid black;
 }
@@ -137,7 +141,7 @@
   height: 25px;
 }
 
-label {
+.discount label {
   font-weight: 600;
   font-size: 25px;
 }
@@ -152,8 +156,17 @@ label {
   margin-top: 10px;
 }
 
+.submit-btn:hover {
+  cursor: pointer;
+  background-color: #1a5ecc;
+}
+
 .selected {
   background-color: aqua;
+}
+
+#infowindow-content {
+  display: none;
 }
 
 @media only screen and (max-width: 750px) {
@@ -164,7 +177,7 @@ label {
 
   .result {
     width: 90% !important;
-    bottom: 0;
+    bottom: 60px;
     margin-left: 10px;
   }
 }
