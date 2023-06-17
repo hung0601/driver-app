@@ -130,6 +130,8 @@
 .price {
   margin-top: 0px;
   margin-bottom: 0px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .discount {

@@ -46,11 +46,13 @@ function Content() {
   return (
     <div>
       <Form colon={false}>
+        <h3>自分の場所</h3>
         <Form.Item
           label={<FontAwesomeIcon icon="fa-solid fa-circle-dot" size="xl" />}
         >
           <Input readOnly placeholder="Basic usage" value={trip.start.name} />
         </Form.Item>
+        <h3>目的地</h3>
         <Form.Item
           label={<FontAwesomeIcon icon="fa-solid fa-location-dot" size="xl" />}
         >
