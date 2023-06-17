@@ -4,6 +4,7 @@ import store from "../../store";
 
 import { initTrip } from "../../store/modules/trip";
 const loader = new Loader({
+  //apikey: "AIzaSyCbiOkbY2VnIunlLqy5wcILaTnxru8drzA",
   // apikey: "AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA",
   apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
   version: "weekly",

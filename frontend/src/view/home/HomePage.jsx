@@ -55,10 +55,22 @@ function HomePage() {
     echo.channel("hello").listen(".message", (event) => {
       if (event.status === 1) {
         dispatch(setDriver(event.data));
+        Modal.info(driverInfoConfig);
+      } else {
+        Modal.info({
+          title: (
+            <div className="modalTitle">
+              <h2>ドライバーが見つけません。申し訳ありません。</h2>
+            </div>
+          ),
+          content: <p></p>,
+          icon: <p></p>,
+          okText: "閉じる",
+        });
       }
       message.destroy();
       setLoading(false);
-      Modal.info(driverInfoConfig);
+
       stopListen();
     });
   };
