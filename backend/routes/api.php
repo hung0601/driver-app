@@ -1,10 +1,10 @@
 <?php
 
-use App\Events\MessageSent;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Customer\FindDriverController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,8 +19,7 @@ use Illuminate\Support\Facades\Log;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('message',function(Request $request){
-    // Log::info('User request .', $request);
-    broadcast(new MessageSent('Hello!',1));
-    return $request->input('start');    
+Route::prefix('customer')->group(function () {
+    Route::post('/find-driver', [FindDriverController::class, 'index']);
+    Route::post('/get-nearby-driver', [FindDriverController::class, 'getNearbyDriver']);
 });

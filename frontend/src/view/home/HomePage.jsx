@@ -1,6 +1,12 @@
 import "./HomePage.css";
-import { loadMap, setLocation } from "../../api/map";
-import { useState } from "react";
+import {
+  loadMap,
+  setLocation,
+  setMark,
+  setNearbyMark,
+  removeMarkers,
+} from "../../api/map";
+import { useState, useEffect } from "react";
 import {
   CalendarIcon,
   EndIcon,
@@ -16,33 +22,39 @@ import echo from "../../service/socket";
 import { Modal } from "antd";
 import { message } from "antd";
 
-import { setDriver } from "../../store/modules/trip";
+import { setDriver, setDriverType } from "../../store/modules/trip";
 
 import hourOrderConfig from "../../component/popup/hour_order";
 import driverInfoConfig from "../../component/popup/driver-info";
 import weeklyOrderConfig from "../../component/popup/weekly-order";
-
 setLocation();
-loadMap();
+
 function HomePage() {
   const trip = useSelector(selectTrip);
-  const [type, setType] = useState(0);
+  const [type, setType] = useState(1);
   const [orderType, setOrderType] = useState("0");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    loadMap();
+  }, []);
   const handleBikeSelect = () => {
-    if (type !== 0) {
-      setType(0);
+    if (type !== 1) {
+      setType(1);
+      dispatch(setDriverType(1));
       $("#0").addClass("selected");
       $("#1").removeClass("selected");
+      setNearbyMark(trip.start.location, 1);
     }
   };
   const handleCarSelect = () => {
-    if (type !== 1) {
-      setType(1);
+    if (type !== 2) {
+      setType(2);
+      dispatch(setDriverType(2));
       $("#1").addClass("selected");
       $("#0").removeClass("selected");
+      setNearbyMark(trip.start.location, 2);
     }
   };
   const handleSelectOrderType = (event) => {
@@ -53,7 +65,10 @@ function HomePage() {
   };
   const listenMsg = () => {
     echo.channel("hello").listen(".message", (event) => {
+      console.log(event);
       if (event.status === 1) {
+        removeMarkers();
+        setMark(event.data);
         dispatch(setDriver(event.data));
         Modal.info(driverInfoConfig);
       } else {
@@ -76,6 +91,7 @@ function HomePage() {
   };
 
   const sendMessage = () => {
+    dispatch(setDriverType(type));
     switch (orderType) {
       case "0":
         var postData = trip;
@@ -89,8 +105,16 @@ function HomePage() {
         setLoading(true);
         message.loading("検索中...");
         axios
-          .post(`http://localhost:8000/api/message`, postData, axiosConfig)
-          .catch((error) => console.log(error));
+          .post(
+            `http://localhost:8000/api/customer/find-driver`,
+            postData,
+            axiosConfig
+          )
+          .catch((error) => {
+            console.log(error);
+            stopListen();
+            setLoading(false);
+          });
         break;
       case "1":
         Modal.confirm(hourOrderConfig);

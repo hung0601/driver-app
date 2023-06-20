@@ -17,12 +17,12 @@ class MessageSent implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public $message;
-    public $user;
-    public function __construct($message,$user)
+    public $data;
+    public $status;
+    public function __construct($status, $data)
     {
-        $this->message=$message;
-        $this->user=$user;
+        $this->status=$status;
+        $this->data=$data;
     }
 
     /**
@@ -38,13 +38,8 @@ class MessageSent implements ShouldBroadcast
     }
     public function broadcastWith(){
         return [
-            'status'=>1,
-            'data'=>[
-                'name'=>'The Thai',
-                'phone'=>'0999999999',
-                'branch'=>'Honda',
-                'palet'=>'17A2-9999'
-            ]
+            'status'=> $this->status,
+            'data'=> $this->data
             
         ];
     }

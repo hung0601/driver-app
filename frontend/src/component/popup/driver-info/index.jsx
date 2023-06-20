@@ -40,15 +40,9 @@ function Content() {
         <div className="popup-container">
           <div className="popup-content">
             <div className="popup-content-header">
-              <img
-                className="anh-dai-dien"
-                src={
-                  "https://haycafe.vn/wp-content/uploads/2022/01/Hinh-anh-cute.jpg"
-                }
-                alt=""
-              />
+              <img className="anh-dai-dien" src={trip.driver.avatar} alt="" />
               <p>
-                5{" "}
+                {trip.driver.rate}{" "}
                 <img
                   src="https://quocvuongtravel.com/media/upload/hangsx/01121865.png"
                   className="icon-start"
@@ -71,7 +65,7 @@ function Content() {
               </div>
               <div className="popup-content-container-item">
                 <label>プレート</label>
-                <p>{trip.driver.palet}</p>
+                <p>{trip.driver.plate}</p>
               </div>
             </div>
           </div>

@@ -9,9 +9,9 @@ class Driver extends Model
 {
     use HasFactory;
 
-    public function vehicles()
+    public function vehicle()
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->hasOne(Vehicle::class);
     }
 
     public function trips()

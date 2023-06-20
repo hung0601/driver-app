@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Customer\FirebaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/firebase', [FirebaseController::class, 'index'])->name('firebase.index');
 Route::get('/', function () {
-    return view('welcome');
+    echo asset('storage/driver-avatar/1.jpg');
 });

@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     end: null,
     route: null,
     driver: null,
+    type: 1,
   },
   reducers: {
     initTrip: (state, action) => {
@@ -18,10 +19,13 @@ export const userSlice = createSlice({
     setDriver: (state, action) => {
       state.driver = action.payload;
     },
+    setDriverType: (state, action) => {
+      state.type = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { initTrip, setDriver } = userSlice.actions;
+export const { initTrip, setDriver, setDriverType } = userSlice.actions;
 export const selectTrip = (state) => state.trip;
 export default userSlice.reducer;

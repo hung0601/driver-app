@@ -1,8 +1,10 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import $ from "jquery";
 import store from "../../store";
-
+import { DriverIcon } from "../../asset/icons";
+import axios from "axios";
 import { initTrip } from "../../store/modules/trip";
+
 const loader = new Loader({
   //apikey: "AIzaSyCbiOkbY2VnIunlLqy5wcILaTnxru8drzA",
   // apikey: "AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA",
@@ -11,12 +13,61 @@ const loader = new Loader({
 });
 const position = { lat: 21.021384, lng: 105.8866827 };
 let map;
+let driverMark = null;
+let infowindow = null;
+let driverNearby = [];
 const options = {
-  fields: ["formatted_address", "geometry", "name", "place_id"],
+  fields: ["formatted_address", "geometry.location", "name", "place_id"],
   componentRestrictions: { country: "vn" },
   strictBounds: false,
   types: [],
 };
+
+export function setNearbyMark(position, type) {
+  removeMarkers();
+  var postData = {
+    location: position,
+    type: type,
+  };
+  var axiosConfig = {
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+    },
+  };
+  axios
+    .post(
+      `http://localhost:8000/api/customer/get-nearby-driver`,
+      postData,
+      axiosConfig
+    )
+    .then((response) => {
+      loader.load().then(async (google) => {
+        response.data.forEach((item) => {
+          driverNearby.push(
+            new google.maps.Marker({
+              position: item,
+              map,
+              icon: DriverIcon,
+            })
+          );
+        });
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+export function removeMarkers() {
+  for (let i = 0; i < driverNearby.length; i++) {
+    driverNearby[i].setMap(null);
+  }
+  driverNearby = [];
+  if (driverMark) {
+    driverMark.setMap(null);
+    driverMark = null;
+  }
+}
 
 function calculateAndDisplayRoute(
   directionsService,
@@ -41,13 +92,19 @@ function calculateAndDisplayRoute(
             placeId: start.place_id,
             name: start.name,
             address: start.formatted_address,
-            loaction: start.geometry.loaction,
+            location: {
+              lat: start.geometry.location.lat(),
+              lng: start.geometry.location.lng(),
+            },
           },
           end: {
             placeId: end.place_id,
             name: end.name,
             address: end.formatted_address,
-            loaction: end.geometry.loaction,
+            location: {
+              lat: start.geometry.location.lat(),
+              lng: start.geometry.location.lng(),
+            },
           },
           route: response.routes[0].legs[0].distance,
         })
@@ -57,11 +114,65 @@ function calculateAndDisplayRoute(
       $(".motorbike span").text(distance * 10000);
       directionsRenderer.setDirections(response);
       $(".result").removeClass("hide");
+      setNearbyMark(
+        {
+          lat: start.geometry.location.lat(),
+          lng: start.geometry.location.lng(),
+        },
+        store.getState().trip.type
+      );
     })
     .catch((e) => window.alert("Directions request failed due to " + e));
 }
+export function setMark(driver) {
+  loader.load().then(async (google) => {
+    const contentString = `
+            <table  border="0" cellspacing="5" cellpadding="6">
+              <tr>
+                <td><strong >氏名</strong></td>
+                <td> ${driver.name}</td>
+              </tr>
+              <tr>
+                <td><strong >電話番号</strong></td>
+                <td>${driver.phone}</td>
+              </tr>
+              <tr>
+                <td><strong >ブランド</strong></td>
+                <td>${driver.branch}</td>
+              </tr>
+              <tr>
+                <td><strong >プレート</strong></td>
+                <td>${driver.plate}</td>
+              </tr>
+            </table>`;
 
+    if (driverMark) {
+      infowindow.setContent(contentString);
+      driverMark.setPosition(driver.position);
+      driverMark.setTitle(driver.name);
+      map.panTo(driver.position);
+    } else {
+      driverMark = new google.maps.Marker({
+        position: driver.position,
+        map,
+        title: driver.name,
+        icon: DriverIcon,
+      });
+      infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        ariaLabel: "Uluru",
+      });
+      driverMark.addListener("click", () => {
+        infowindow.open({
+          anchor: driverMark,
+          map,
+        });
+      });
+    }
+  });
+}
 export const loadMap = () => {
+  // while (!document.getElementById("map"));
   loader.load().then(async (google) => {
     const { Map } = await google.maps.importLibrary("maps");
     const places = await google.maps.importLibrary("places");
@@ -132,7 +243,6 @@ export const loadMap = () => {
     autocomplete2.addListener("place_changed", () => {
       infowindow.close();
       marker2.setVisible(false);
-
       const place = autocomplete2.getPlace();
       if (autocomplete.getPlace() && autocomplete2.getPlace())
         calculateAndDisplayRoute(
