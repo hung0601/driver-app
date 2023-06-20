@@ -8,12 +8,15 @@ import { router } from "./routes";
 import store from "./store";
 import { Provider } from "react-redux";
 import { MainLayout } from "./component/layout";
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
-      <MainLayout />
+      {!window.location.pathname.startsWith('/admin') && <MainLayout />}      
     </Provider>
   </React.StrictMode>
 );

@@ -1,0 +1,22 @@
+.right-align-parent {
+    position: relative;
+}
+.right-align-child {
+    position: absolute;
+    right: 2%;
+}
+.header {
+    background-color: #ffb366;
+    /* margin-bottom: 10vh; */
+}
+.sidebar {
+    background-color: #d6d2d274;
+    width: 20%;
+}
+.menu-item {
+    background-color: #ffbf80;
+}
+.sub-menu-item {
+    background-color: #ffc0809a;
+    width: 85%;
+}

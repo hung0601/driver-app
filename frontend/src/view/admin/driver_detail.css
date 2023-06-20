@@ -1,0 +1,10 @@
+.title {
+    background-color: #ffc0809a;
+}
+.infor-cell {
+    background-color: #d6d2d290;
+}
+tr td select.select-cell {
+    background-color: #d6d2d290;
+    width: 65%;
+}
