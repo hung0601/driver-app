@@ -19,14 +19,14 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminLayout />
+    element: <AdminLayout />,
   },
   {
     path: "/admin/driver-requests",
-    element: <DriverList />
+    element: <DriverList />,
   },
   {
     path: "/admin/drivers/:id",
-    element: <DriverDetail />
+    element: <DriverDetail />,
   },
 ]);
