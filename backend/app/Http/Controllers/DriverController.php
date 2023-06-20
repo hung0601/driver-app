@@ -37,7 +37,7 @@ class DriverController extends Controller
     public function getInactiveDriverById($id)
     {
         $driver = Driver::find($id);
-        $first_veh = $driver->vehicles[0];
+        $first_veh = $driver->vehicle;
         $driver['first_veh_plate'] = $first_veh['plate'];
         $driver['first_veh_type'] = Vehicle::find($first_veh['id'])->vehicle_type['type_name'];
 
