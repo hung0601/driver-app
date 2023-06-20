@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\MessageSent;
+use App\Http\Controllers\DriverController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
@@ -22,5 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('message',function(Request $request){
     // Log::info('User request .', $request);
     broadcast(new MessageSent('Hello!',1));
-    return $request->input('start');    
+    return $request->input('start');
+});
+
+Route::controller(DriverController::class)->prefix('drivers')->group(function () {
+    Route::get('', 'index');
+    Route::get('{id}/inactive', 'getInactiveDriverById');
+    Route::get('signup-requests', 'getSignupRequests');
+    Route::post('process-signup-request', 'processSignupRequest');
 });

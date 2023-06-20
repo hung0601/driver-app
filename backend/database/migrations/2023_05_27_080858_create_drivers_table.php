@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('dob');
             $table->string('address');
             $table->string('phone', 20);
-            $table->decimal('rate', 2, 1, true);
+            $table->decimal('rate', 2, 1, true)->nullable();
             $table->unsignedInteger('status');
             $table->timestamps();
         });
