@@ -1,10 +1,9 @@
 import React from "react";
-import { Input, TimePicker, Form, Select } from "antd";
-import { ConfigProvider } from "antd";
-import { useSelector } from "react-redux";
-import { selectTrip } from "../../../store/modules/trip";
+import axios from "axios";
+import { Input, TimePicker, Form, Select, ConfigProvider } from "antd";
+import { useSelector, Provider } from "react-redux";
 import store from "../../../store";
-import { Provider } from "react-redux";
+
 import dayjs from "dayjs";
 import jaJP from "antd/locale/ja_JP";
 import "./index.css";
@@ -12,9 +11,13 @@ import "./index.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { selectTrip } from "../../../store/modules/trip";
+
 library.add(fas);
 const format = "HH:mm";
 const locale = jaJP;
+let timeOut = "00:00";
+let day;
 
 const config = {
   title: (
@@ -29,11 +32,36 @@ const config = {
       </ConfigProvider>
     </Provider>
   ),
-  icon: <p></p>,
+  icon: <p />,
   okText: "設定",
   cancelText: "キャンセル",
   onOk() {
-    console.log("ok click");
+    var postData = {
+      id: 1,
+      pickup_time: timeOut,
+      start: store.getState().trip.start.placeId,
+      end: store.getState().trip.end.placeId,
+      driver_type: store.getState().trip.type,
+      day: day.map((item) => item + 1),
+    };
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post(
+        "http://localhost:8000/api/customer/set-weekly-schedule",
+        postData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 function Content() {
@@ -71,6 +99,12 @@ function Content() {
       value: 6,
     },
   ];
+  const handleChange = (value) => {
+    day = value;
+  };
+  const onTimeChange = (time, timeString) => {
+    timeOut = timeString;
+  };
   return (
     <div>
       <Form colon={false}>
@@ -89,7 +123,11 @@ function Content() {
         <Form.Item
           label={<FontAwesomeIcon icon="fa-solid fa-stopwatch" size="xl" />}
         >
-          <TimePicker defaultValue={dayjs("12:08", format)} format={format} />
+          <TimePicker
+            defaultValue={dayjs("00:00", format)}
+            format={format}
+            onChange={onTimeChange}
+          />
         </Form.Item>
         <h3>繰り返す</h3>
         <Form.Item
@@ -104,6 +142,7 @@ function Content() {
             placeholder="選んでください"
             defaultValue={[]}
             options={selectOption}
+            onChange={handleChange}
           />
         </Form.Item>
       </Form>

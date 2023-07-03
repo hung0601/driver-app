@@ -1,0 +1,86 @@
+.payment-info {
+    border: 2px solid black;
+    padding: 5px;
+}
+
+.container-info h5 {
+    font-weight: 400;
+}
+
+.payment-info div {
+    font-size: 16px;
+    border: 2px solid black;
+    width: 80px;
+    text-align: center;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.customer-name {
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 2px solid black;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.customer-name span {
+    margin-right: 5px;
+}
+
+.customer-phone {
+    margin-top: 10px;
+}
+
+.customer-phone h5 {
+    font-size: 18px;
+}
+
+.customer-phone span {
+    font-size: 15px;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.distance-info p {
+    margin-bottom: 0;
+    margin-left: 20px;
+    font-style: italic;
+}
+
+.location-info p {
+    font-style: italic;
+    margin-left: 15px;
+}
+
+.location-icon {
+    position: relative;
+}
+
+.location-address {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.location-info .location-icon {
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.trip {
+    position: relative;
+}
+
+.draw-line {
+    position: absolute;
+    width: 2px;
+    height: 90px;
+    top: 20px;
+    left: 9px;
+    background-color: black;
+}
+
+.ant-modal-confirm-btns {
+    font-size: 18px !important;
+}

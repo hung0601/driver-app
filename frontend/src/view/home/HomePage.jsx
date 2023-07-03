@@ -1,12 +1,12 @@
 import "./HomePage.css";
-import {
-  loadMap,
-  setLocation,
-  setMark,
-  setNearbyMark,
-  removeMarkers,
-} from "../../api/map";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { Modal, message } from "antd";
+import echo from "../../service/socket";
+import store from "../../store";
+
+import { selectTrip, setDriver, setDriverType } from "../../store/modules/trip";
 import {
   CalendarIcon,
   EndIcon,
@@ -14,37 +14,51 @@ import {
   CarIcon,
   BikeIcon,
 } from "../../asset/icons";
-import { useSelector, useDispatch } from "react-redux";
-import { selectTrip } from "../../store/modules/trip";
-import $ from "jquery";
-import axios from "axios";
-import echo from "../../service/socket";
-import { Modal } from "antd";
-import { message } from "antd";
-
-import { setDriver, setDriverType } from "../../store/modules/trip";
+import {
+  loadMap,
+  setLocation,
+  setMark,
+  setNearbyMark,
+  removeMarkers,
+  setDirection,
+} from "../../api/map";
 
 import hourOrderConfig from "../../component/popup/hour_order";
 import driverInfoConfig from "../../component/popup/driver-info";
 import weeklyOrderConfig from "../../component/popup/weekly-order";
+import driverReviewConfig from "../../component/popup/driver-review";
+
 setLocation();
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 function HomePage() {
   const trip = useSelector(selectTrip);
   const [type, setType] = useState(1);
+  const [step, setStep] = useState(1);
   const [orderType, setOrderType] = useState("0");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     loadMap();
+    listenScheduleEvent();
   }, []);
+  const listenScheduleEvent = () => {
+    echo.channel("schedule").listen(".schedule_send", async (event) => {
+      message.info(
+        "予約していた乗車の時間です。システムは自動的にドライバーを見つけます。"
+      );
+      setType(event.data.driver_type);
+      store.dispatch(setDriverType(event.data.driver_type));
+      await setDirection(event.data.start_location, event.data.end_location);
+      await delay(3000);
+      sendMessage();
+    });
+  };
   const handleBikeSelect = () => {
     if (type !== 1) {
       setType(1);
       dispatch(setDriverType(1));
-      $("#0").addClass("selected");
-      $("#1").removeClass("selected");
       setNearbyMark(trip.start.location, 1);
     }
   };
@@ -52,8 +66,6 @@ function HomePage() {
     if (type !== 2) {
       setType(2);
       dispatch(setDriverType(2));
-      $("#1").addClass("selected");
-      $("#0").removeClass("selected");
       setNearbyMark(trip.start.location, 2);
     }
   };
@@ -63,6 +75,12 @@ function HomePage() {
   const stopListen = () => {
     echo.channel("hello").stopListening(".message");
   };
+  const listenCompletedEvent = () => {
+    echo.channel("completeTrip").listen(".complete", (event) => {
+      showModal();
+      echo.channel("completeTrip").stopListening(".complete");
+    });
+  };
   const listenMsg = () => {
     echo.channel("hello").listen(".message", (event) => {
       console.log(event);
@@ -71,6 +89,8 @@ function HomePage() {
         setMark(event.data);
         dispatch(setDriver(event.data));
         Modal.info(driverInfoConfig);
+        setStep(2);
+        listenCompletedEvent();
       } else {
         Modal.info({
           title: (
@@ -78,14 +98,13 @@ function HomePage() {
               <h2>ドライバーが見つけません。申し訳ありません。</h2>
             </div>
           ),
-          content: <p></p>,
-          icon: <p></p>,
+          content: <p />,
+          icon: <p />,
           okText: "閉じる",
         });
       }
       message.destroy();
       setLoading(false);
-
       stopListen();
     });
   };
@@ -94,8 +113,8 @@ function HomePage() {
     dispatch(setDriverType(type));
     switch (orderType) {
       case "0":
-        var postData = trip;
-        let axiosConfig = {
+        var postData = store.getState().trip;
+        const axiosConfig = {
           headers: {
             "Content-Type": "application/json;charset=UTF-8",
             "Access-Control-Allow-Origin": "*",
@@ -103,10 +122,10 @@ function HomePage() {
         };
         listenMsg();
         setLoading(true);
-        message.loading("検索中...");
+        message.loading("検索中...", 180);
         axios
           .post(
-            `http://localhost:8000/api/customer/find-driver`,
+            "http://localhost:8000/api/customer/find-driver",
             postData,
             axiosConfig
           )
@@ -126,12 +145,15 @@ function HomePage() {
         break;
     }
   };
+  const showModal = () => {
+    Modal.confirm(driverReviewConfig);
+  };
   return (
     <div className="App">
-      <div className="pac-card" id="pac-card">
+      <div className={step === 2 ? "pac-card hide" : "pac-card"} id="pac-card">
         <div id="pac-container">
           <div className="input-element">
-            <img className="icons" src={StartIcon} alt="start icons"></img>
+            <img className="icons" src={StartIcon} alt="start icons" />
             <input
               id="pac-input"
               className="pac-input"
@@ -140,7 +162,7 @@ function HomePage() {
             />
           </div>
           <div className="input-element">
-            <img className="icons" src={EndIcon} alt="start icons"></img>
+            <img className="icons" src={EndIcon} alt="start icons" />
             <input
               id="pac-input2"
               className="pac-input"
@@ -149,7 +171,7 @@ function HomePage() {
             />
           </div>
           <div className="input-element">
-            <img className="icons" src={CalendarIcon} alt="start icons"></img>
+            <img className="icons" src={CalendarIcon} alt="start icons" />
             <select
               className="pac-input"
               id="order-type"
@@ -163,50 +185,86 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className="result hide">
-        <div className="driver-type">
-          <div
-            id="0"
-            onClick={handleBikeSelect}
-            className="motorbike type selected"
-          >
-            <div className="discript">
-              <img src={BikeIcon} alt="bike icon"></img>
-              <h2>バイク</h2>
+      {step === 1 ? (
+        <div className="result hide">
+          <div className="driver-type">
+            <div
+              id="0"
+              onClick={handleBikeSelect}
+              className={
+                type === 1 ? "motorbike type selected" : "motorbike type"
+              }
+            >
+              <div className="discript">
+                <img src={BikeIcon} alt="bike icon" />
+                <h2>バイク</h2>
+              </div>
+              <p className="price">
+                <span>30000</span> VND
+              </p>
             </div>
-            <p className="price">
-              <span>30000</span> VND
-            </p>
+            <div
+              id="1"
+              onClick={handleCarSelect}
+              className={type === 2 ? "car type selected" : "car type"}
+            >
+              <div className="discript">
+                <img src={CarIcon} alt="car icon" />
+                <h2>車</h2>
+              </div>
+              <p className="price">
+                <span>30000</span> VND
+              </p>
+            </div>
           </div>
-          <div id="1" onClick={handleCarSelect} className="car type">
-            <div className="discript">
-              <img src={CarIcon} alt="car icon"></img>
-              <h2>車</h2>
+          <div className="discount">
+            <label htmlFor="code">割合：</label>
+            <input name="code" type="text" placeholder="コードを入力" />
+          </div>
+          {loading ? (
+            <button disabled onClick={sendMessage} className="submit-btn">
+              行くよう
+            </button>
+          ) : (
+            <button onClick={sendMessage} className="submit-btn">
+              行くよう
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="result">
+          <div className="driver-type">
+            <div id="0" className="type-result type">
+              {trip.type === 1 ? (
+                <div className="discript">
+                  <img src={BikeIcon} alt="bike icon" />
+                  <h2>バイク</h2>
+                </div>
+              ) : (
+                <div className="discript">
+                  <img src={CarIcon} alt="car icon" />
+                  <h2>車</h2>
+                </div>
+              )}
+
+              <p className="price">
+                <span>
+                  {(trip.route.value / 1000).toFixed(1) * trip.type * 10000}
+                </span>{" "}
+                VND
+              </p>
             </div>
-            <p className="price">
-              <span>30000</span> VND
-            </p>
+            <div className="cancel-box">
+              <button>キャンセル</button>
+            </div>
           </div>
         </div>
-        <div className="discount">
-          <label htmlFor="code">割合：</label>
-          <input name="code" type="text" placeholder="コードを入力"></input>
-        </div>
-        {loading ? (
-          <button disabled onClick={sendMessage} className="submit-btn">
-            行くよう
-          </button>
-        ) : (
-          <button onClick={sendMessage} className="submit-btn">
-            行くよう
-          </button>
-        )}
-      </div>
-      <div id="map"></div>
+      )}
+      <div id="map" />
       <div id="infowindow-content">
-        <span id="place-name" className="title"></span>
+        <span id="place-name" className="title" />
         <br />
-        <span id="place-address"></span>
+        <span id="place-address" />
       </div>
     </div>
   );

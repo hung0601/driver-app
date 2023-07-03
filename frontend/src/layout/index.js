@@ -1,1 +1,1 @@
-console.log("kkk");
+console.log('kkk');

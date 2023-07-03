@@ -2,23 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
-//import App from "./App";
+// import App from "./App";
+import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 import { router } from "./routes";
 import store from "./store";
-import { Provider } from "react-redux";
 import { MainLayout } from "./component/layout";
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.js';
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      {!window.location.pathname.startsWith('/admin') && <MainLayout />}      
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+    {window.location.pathname.startsWith("/customer") && <MainLayout />}
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

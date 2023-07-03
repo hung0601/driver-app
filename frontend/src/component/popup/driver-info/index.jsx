@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { ConfigProvider } from "antd";
-import { useSelector } from "react-redux";
-import { selectTrip } from "../../../store/modules/trip";
-import store from "../../../store";
-import { Provider } from "react-redux";
-import jaJP from "antd/locale/ja_JP";
-import "./index.css";
+import { ConfigProvider } from 'antd';
+import { useSelector, Provider } from 'react-redux';
+import { selectTrip } from '../../../store/modules/trip';
+import store from '../../../store';
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
+import jaJP from 'antd/locale/ja_JP';
+import './index.css';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 library.add(fas);
 
@@ -28,8 +28,8 @@ const config = {
       </ConfigProvider>
     </Provider>
   ),
-  icon: <p></p>,
-  okText: "閉じる",
+  icon: <p />,
+  okText: '閉じる',
 };
 function Content() {
   const trip = useSelector(selectTrip);
@@ -42,7 +42,8 @@ function Content() {
             <div className="popup-content-header">
               <img className="anh-dai-dien" src={trip.driver.avatar} alt="" />
               <p>
-                {trip.driver.rate}{" "}
+                {trip.driver.rate}
+                {' '}
                 <img
                   src="https://quocvuongtravel.com/media/upload/hangsx/01121865.png"
                   className="icon-start"
@@ -53,7 +54,10 @@ function Content() {
             <div className="popup-content-container">
               <div className="popup-content-container-item">
                 <label>氏名</label>
-                <p> {trip.driver.name}</p>
+                <p>
+                  {' '}
+                  {trip.driver.name}
+                </p>
               </div>
               <div className="popup-content-container-item">
                 <label>電話番号</label>

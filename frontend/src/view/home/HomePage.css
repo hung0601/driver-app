@@ -173,13 +173,42 @@
 
 @media only screen and (max-width: 750px) {
   .pac-card {
-    width: 90% !important;
-    margin-right: 10px;
+    width: 95% !important;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 0 0 0;
   }
 
   .result {
-    width: 90% !important;
+    width: 95% !important;
     bottom: 60px;
-    margin-left: 10px;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
+}
+
+.hide {
+  display: none !important;
+}
+
+.type-result {
+  width: 50%;
+  border-bottom: 0px !important;
+  border-right: 2px solid black;
+}
+
+.cancel-box {
+  width: 50%;
+  align-items: center;
+  text-align: center;
+
+}
+
+.cancel-box button {
+  border: none;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  font-weight: 600;
 }

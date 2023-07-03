@@ -1,10 +1,9 @@
 import React from "react";
-import { Input, TimePicker, DatePicker, Form } from "antd";
-import { ConfigProvider } from "antd";
-import { useSelector } from "react-redux";
-import { selectTrip } from "../../../store/modules/trip";
+import axios from "axios";
+import { Input, TimePicker, DatePicker, Form, ConfigProvider } from "antd";
+import { useSelector, Provider } from "react-redux";
 import store from "../../../store";
-import { Provider } from "react-redux";
+
 import dayjs from "dayjs";
 import jaJP from "antd/locale/ja_JP";
 import "./index.css";
@@ -12,10 +11,13 @@ import "./index.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { selectTrip } from "../../../store/modules/trip";
+
 library.add(fas);
 const format = "HH:mm";
 const locale = jaJP;
-
+let dateOut = dayjs();
+let timeOut = dayjs("00:00", format);
 const config = {
   title: (
     <div className="modalTitle">
@@ -29,17 +31,47 @@ const config = {
       </ConfigProvider>
     </Provider>
   ),
-  icon: <p></p>,
+  icon: <p />,
   okText: "設定",
   cancelText: "キャンセル",
   onOk() {
-    console.log("ok click");
+    dateOut = dateOut
+      .set("hour", timeOut.hour())
+      .set("minute", timeOut.minute());
+    var postData = {
+      id: 1,
+      datetime: dateOut.toDate(),
+      start: store.getState().trip.start.placeId,
+      end: store.getState().trip.end.placeId,
+      driver_type: store.getState().trip.type,
+    };
+    const axiosConfig = {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post(
+        "http://localhost:8000/api/customer/set-schedule",
+        postData,
+        axiosConfig
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 function Content() {
   const trip = useSelector(selectTrip);
-  const onChange = (date, dateString) => {
-    console.log(date, dateString);
+  const onDateChange = (date, dateString) => {
+    dateOut = date.clone();
+  };
+  const onTimeChange = (time, timeString) => {
+    timeOut = time.clone();
   };
   //   const labelCol = { sm: { span: 2, offset: 0 } };
   //   const wrapperCol = { sm: { span: 22, offset: 0 } };
@@ -61,12 +93,16 @@ function Content() {
         <Form.Item
           label={<FontAwesomeIcon icon="fa-solid fa-calendar-days" size="xl" />}
         >
-          <DatePicker onChange={onChange} />
+          <DatePicker defaultValue={dayjs()} onChange={onDateChange} />
         </Form.Item>
         <Form.Item
           label={<FontAwesomeIcon icon="fa-solid fa-stopwatch" size="xl" />}
         >
-          <TimePicker defaultValue={dayjs("12:08", format)} format={format} />
+          <TimePicker
+            defaultValue={dayjs("00:00", format)}
+            format={format}
+            onChange={onTimeChange}
+          />
         </Form.Item>
       </Form>
     </div>

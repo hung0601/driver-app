@@ -1,18 +1,21 @@
-import { Loader } from "@googlemaps/js-api-loader";
 import $ from "jquery";
+import axios from "axios";
 import store from "../../store";
 import { DriverIcon } from "../../asset/icons";
-import axios from "axios";
 import { initTrip } from "../../store/modules/trip";
+import { Loader } from "@googlemaps/js-api-loader";
+// apikey: "AIzaSyAtPDzxp3jysR8-iMPTyMaEnFvN59lp-sI",
+// apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
 
 const loader = new Loader({
-  //apikey: "AIzaSyCbiOkbY2VnIunlLqy5wcILaTnxru8drzA",
-  // apikey: "AIzaSyBS6lGj7CsMDE5O9bMEf3I3anmfn34OBlA",
-  apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
+  apiKey: "AIzaSyDnVypcq2NVDLpwifna1XrBi7ASZp5h69s",
+  //apiKey: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg",
   version: "weekly",
 });
 const position = { lat: 21.021384, lng: 105.8866827 };
 let map;
+let directionsRenderer;
+let directionsService;
 let driverMark = null;
 let infowindow = null;
 let driverNearby = [];
@@ -25,11 +28,11 @@ const options = {
 
 export function setNearbyMark(position, type) {
   removeMarkers();
-  var postData = {
+  const postData = {
     location: position,
-    type: type,
+    type,
   };
-  var axiosConfig = {
+  const axiosConfig = {
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
       "Access-Control-Allow-Origin": "*",
@@ -37,7 +40,7 @@ export function setNearbyMark(position, type) {
   };
   axios
     .post(
-      `http://localhost:8000/api/customer/get-nearby-driver`,
+      "http://localhost:8000/api/customer/get-nearby-driver",
       postData,
       axiosConfig
     )
@@ -58,6 +61,30 @@ export function setNearbyMark(position, type) {
       console.log(error);
     });
 }
+
+export async function setDirection(startId, endId) {
+  await loader.load().then(async (google) => {
+    let request = {
+      placeId: startId,
+      fields: ["formatted_address", "geometry.location", "name", "place_id"],
+    };
+    var service = new google.maps.places.PlacesService(map);
+    service.getDetails(request, (res) => {
+      $("#pac-input").val(res.name);
+      request.placeId = endId;
+      service.getDetails(request, async (res2) => {
+        $("#pac-input2").val(res2.name);
+        await calculateAndDisplayRoute(
+          directionsService,
+          directionsRenderer,
+          res,
+          res2,
+          google.maps.TravelMode.DRIVING
+        );
+      });
+    });
+  });
+}
 export function removeMarkers() {
   for (let i = 0; i < driverNearby.length; i++) {
     driverNearby[i].setMap(null);
@@ -69,14 +96,14 @@ export function removeMarkers() {
   }
 }
 
-function calculateAndDisplayRoute(
+async function calculateAndDisplayRoute(
   directionsService,
   directionsRenderer,
   start,
   end,
   mode
 ) {
-  directionsService
+  await directionsService
     .route({
       origin: { placeId: start.place_id },
 
@@ -85,7 +112,7 @@ function calculateAndDisplayRoute(
       travelMode: mode,
     })
     .then((response) => {
-      var distance = response.routes[0].legs[0].distance.value / 1000;
+      let distance = response.routes[0].legs[0].distance.value / 1000;
       store.dispatch(
         initTrip({
           start: {
@@ -122,7 +149,7 @@ function calculateAndDisplayRoute(
         store.getState().trip.type
       );
     })
-    .catch((e) => window.alert("Directions request failed due to " + e));
+    .catch((e) => window.alert(`Directions request failed due to ${e}`));
 }
 export function setMark(driver) {
   loader.load().then(async (google) => {
@@ -176,12 +203,13 @@ export const loadMap = () => {
   loader.load().then(async (google) => {
     const { Map } = await google.maps.importLibrary("maps");
     const places = await google.maps.importLibrary("places");
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
     map = new Map(document.getElementById("map"), {
       center: position,
       zoom: 13,
       mapTypeControl: false,
+      disableDefaultUI: true,
     });
 
     directionsRenderer.setMap(map);
@@ -210,7 +238,7 @@ export const loadMap = () => {
 
       const place = autocomplete.getPlace();
       // console.log(place);
-      if (autocomplete.getPlace() && autocomplete2.getPlace())
+      if (autocomplete.getPlace() && autocomplete2.getPlace()) {
         calculateAndDisplayRoute(
           directionsService,
           directionsRenderer,
@@ -218,33 +246,18 @@ export const loadMap = () => {
           autocomplete2.getPlace(),
           google.maps.TravelMode.DRIVING
         );
+      }
       if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        window.alert("No details available for input: '" + place.name + "'");
-        return;
+        window.alert(`No details available for input: '${place.name}'`);
       }
-
-      // If the place has a geometry, then present it on a map.
-      // if (place.geometry.viewport) {
-      //   map.fitBounds(place.geometry.viewport);
-      // } else {
-      //   map.setCenter(place.geometry.location);
-      //   map.setZoom(12);
-      // }
-
-      // marker.setPosition(place.geometry.location);
-      // marker.setVisible(true);
-      // infowindowContent.children["place-name"].textContent = place.name;
-      // infowindowContent.children["place-address"].textContent =
-      //   place.formatted_address;
-      // infowindow.open(map, marker);
     });
     autocomplete2.addListener("place_changed", () => {
       infowindow.close();
       marker2.setVisible(false);
       const place = autocomplete2.getPlace();
-      if (autocomplete.getPlace() && autocomplete2.getPlace())
+      if (autocomplete.getPlace() && autocomplete2.getPlace()) {
         calculateAndDisplayRoute(
           directionsService,
           directionsRenderer,
@@ -252,11 +265,11 @@ export const loadMap = () => {
           autocomplete2.getPlace(),
           google.maps.TravelMode.DRIVING
         );
+      }
       if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        window.alert("No details available for input: '" + place.name + "'");
-        return;
+        window.alert(`No details available for input: '${place.name}'`);
       }
     });
   });

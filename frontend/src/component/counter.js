@@ -1,6 +1,6 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increment, selectCount } from "../store/modules/user";
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { decrement, increment, selectCount } from '../store/modules/user';
 
 export function Counter() {
   const count = useSelector(selectCount);

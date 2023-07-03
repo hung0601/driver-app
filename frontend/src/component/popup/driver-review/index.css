@@ -1,0 +1,38 @@
+.ant-modal-confirm-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+h3 {
+    margin-bottom: 0px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0 I !important;
+    padding-right: 0 I !important;
+    width: 100% !important;
+    margin: 0 0 0 0 !important;
+}
+
+.text {
+    text-align: center;
+}
+
+.input {
+    width: 70%;
+}
+
+.text-box {
+    height: 50px;
+}
+
+.ant-modal-content {
+    padding: 0 0 20px 0 !important;
+}

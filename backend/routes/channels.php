@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Driver;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -16,4 +17,11 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('hello', function ($user, $id) {
     // return (int) $user->id === (int) $id;
     return  true;
+});
+Broadcast::channel('completeTrip', function () {
+    // return (int) $user->id === (int) $id;
+    return  true;
+});
+Broadcast::channel('driverChoose', function ( $driverID) {
+    return true;
 });
