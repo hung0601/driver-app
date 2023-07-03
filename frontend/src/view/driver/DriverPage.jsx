@@ -241,7 +241,7 @@ class DriverPage extends Component {
             {this.state.step === 2 && (
               <div className="main-container">
                 <div className="payment-info">
-                  <p>68 Le Thanh Nghi, Hai Ba Trung, Ha Noi</p>
+                  <p>{this.state.trip.start.address}</p>
                   <h5>
                     TaJaTaxi . VND ~{" "}
                     {this.state.trip &&
