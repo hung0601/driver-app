@@ -81,6 +81,22 @@ export async function setDirection(startId, endId) {
           res2,
           google.maps.TravelMode.DRIVING
         );
+        var postData = store.getState().trip;
+        const axiosConfig = {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+        };
+        axios
+          .post(
+            "http://localhost:8000/api/customer/find-driver",
+            postData,
+            axiosConfig
+          )
+          .catch((error) => {
+            console.log(error);
+          });
       });
     });
   });

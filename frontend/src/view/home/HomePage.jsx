@@ -27,9 +27,10 @@ import hourOrderConfig from "../../component/popup/hour_order";
 import driverInfoConfig from "../../component/popup/driver-info";
 import weeklyOrderConfig from "../../component/popup/weekly-order";
 import driverReviewConfig from "../../component/popup/driver-review";
+import { useCallback } from "react";
 
 setLocation();
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+//const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 function HomePage() {
   const trip = useSelector(selectTrip);
@@ -39,10 +40,44 @@ function HomePage() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const listenCompletedEvent = useCallback(() => {
+    echo.channel("completeTrip").listen(".complete", (event) => {
+      showModal();
+      echo.channel("completeTrip").stopListening(".complete");
+    });
+  }, []);
+
+  const listenMsg = useCallback(() => {
+    echo.channel("hello").listen(".message", (event) => {
+      console.log(event);
+      if (event.status === 1) {
+        removeMarkers();
+        setMark(event.data);
+        store.dispatch(setDriver(event.data));
+        Modal.info(driverInfoConfig);
+        setStep(2);
+        listenCompletedEvent();
+      } else {
+        Modal.info({
+          title: (
+            <div className="modalTitle">
+              <h2>ドライバーが見つけません。申し訳ありません。</h2>
+            </div>
+          ),
+          content: <p />,
+          icon: <p />,
+          okText: "閉じる",
+        });
+      }
+      message.destroy();
+      setLoading(false);
+    });
+  }, [listenCompletedEvent]);
   useEffect(() => {
     loadMap();
+    listenMsg();
     listenScheduleEvent();
-  }, []);
+  }, [listenMsg]);
   const listenScheduleEvent = () => {
     echo.channel("schedule").listen(".schedule_send", async (event) => {
       message.info(
@@ -51,8 +86,8 @@ function HomePage() {
       setType(event.data.driver_type);
       store.dispatch(setDriverType(event.data.driver_type));
       await setDirection(event.data.start_location, event.data.end_location);
-      await delay(3000);
-      sendMessage();
+      setLoading(true);
+      message.loading("検索中...", 180);
     });
   };
   const handleBikeSelect = () => {
@@ -72,42 +107,6 @@ function HomePage() {
   const handleSelectOrderType = (event) => {
     setOrderType(event.target.value);
   };
-  const stopListen = () => {
-    echo.channel("hello").stopListening(".message");
-  };
-  const listenCompletedEvent = () => {
-    echo.channel("completeTrip").listen(".complete", (event) => {
-      showModal();
-      echo.channel("completeTrip").stopListening(".complete");
-    });
-  };
-  const listenMsg = () => {
-    echo.channel("hello").listen(".message", (event) => {
-      console.log(event);
-      if (event.status === 1) {
-        removeMarkers();
-        setMark(event.data);
-        dispatch(setDriver(event.data));
-        Modal.info(driverInfoConfig);
-        setStep(2);
-        listenCompletedEvent();
-      } else {
-        Modal.info({
-          title: (
-            <div className="modalTitle">
-              <h2>ドライバーが見つけません。申し訳ありません。</h2>
-            </div>
-          ),
-          content: <p />,
-          icon: <p />,
-          okText: "閉じる",
-        });
-      }
-      message.destroy();
-      setLoading(false);
-      stopListen();
-    });
-  };
 
   const sendMessage = () => {
     dispatch(setDriverType(type));
@@ -120,7 +119,6 @@ function HomePage() {
             "Access-Control-Allow-Origin": "*",
           },
         };
-        listenMsg();
         setLoading(true);
         message.loading("検索中...", 180);
         axios
@@ -131,7 +129,6 @@ function HomePage() {
           )
           .catch((error) => {
             console.log(error);
-            stopListen();
             setLoading(false);
           });
         break;
