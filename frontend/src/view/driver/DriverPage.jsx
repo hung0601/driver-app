@@ -110,7 +110,7 @@ class DriverPage extends Component {
       content: <TripConfirm />,
       icon: <p />,
       okText: "Confirm",
-      cancelText: "Refuse",
+      cancelText: "Reject",
       onOk: () => {},
     });
   }

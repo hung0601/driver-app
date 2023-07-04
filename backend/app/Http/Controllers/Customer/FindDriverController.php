@@ -63,17 +63,8 @@ class FindDriverController extends Controller
             $newTrip->customer_id = 1;
             $newTrip->start_location =$request->post('start');
             $newTrip->end_location =$request->post('end');
-            // $newTrip->start_location ='fdsfds';
-            // $newTrip->end_location ='fsdfdsfs';
             $newTrip->status = 0;
             $newTrip->save();
-            // $newTrip= Trip::create([
-            //     'driver_id' => $id,
-            //     'customer_id'=> 1,
-            //     'start_location'=>'test1',
-            //     'end_location'=>'test2',
-            //     'status'=>0
-            // ]);
             $tripId = $newTrip->id;
             $sendData = [
                 'name' => $driver->name,
