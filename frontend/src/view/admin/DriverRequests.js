@@ -55,7 +55,11 @@ function DriverRequests() {
   };
 
   useEffect(() => {
-    setTotalPage(Math.floor(totalRecord / per_page + 1));
+    if (totalRecord % per_page === 0) {
+      setTotalPage(totalRecord / per_page)
+    } else {
+      setTotalPage(Math.floor(totalRecord / per_page + 1));
+    }
   }, [totalRecord]);
 
   useEffect(() => {
@@ -120,7 +124,7 @@ function DriverRequests() {
           <div className="d-flex align-items-center">
             <div className="ms-5" />
             <span style={{ minWidth: '90px' }}>フィルたー:</span>
-            <select className="form-select rounded-0" style={{ backgroundColor: '#d6d2d290' }} onChange={handleFilter}>
+            <select className="form-select rounded-0 border-dark" style={{}} onChange={handleFilter}>
               <option value="">すべて</option>
               <option value="N1">N1</option>
               <option value="N2">N2</option>
@@ -145,17 +149,17 @@ function DriverRequests() {
           </thead>
           <tbody>
             {drivers.map((item, index) => (
-              <tr className="" key={item.id}>
+              <tr className="" key={index}>
                 <td className="border border-dark border-top-0 border-bottom-0 table-cell">
                   <div className="pt-1" style={{ width: '98%' }}>
-                      {index + 1 + per_page * (curPage - 1)}
-                    </div>
+                    {index + 1 + per_page * (curPage - 1)}
+                  </div>
                 </td>
                 <td className="border border-dark border-top-0 border-bottom-0 table-cell">
                   <div className="pt-1" style={{ width: '98%' }}>
-                      {item.id}
-                      {' '}
-                    </div>
+                    {item.id}
+                    {' '}
+                  </div>
                 </td>
                 <td className="border border-dark border-top-0 border-bottom-0 table-cell">
                   <div className="pt-1" style={{ width: '98%' }}>{item.name}</div>
@@ -168,10 +172,10 @@ function DriverRequests() {
                 </td>
                 <td className="table-cell">
                   <div className="" style={{ width: '98%', fontSize: '20px' }}>
-                      <Link to={`/admin/drivers/${item.id}`}>
-                          <AiOutlineEye />
-                        </Link>
-                    </div>
+                    <Link to={`/admin/drivers/${item.id}`}>
+                      <AiOutlineEye />
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}

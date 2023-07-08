@@ -14,9 +14,19 @@
     width: 20%;
 }
 .menu-item {
-    background-color: #ffbf80;
+    /* background-color: #ffbf80; */
+    background-color: #ffc0809a;
+}
+.menu-item:hover {
+    background-color: #f5b573;
 }
 .sub-menu-item {
     background-color: #ffc0809a;
     width: 85%;
+}
+.sub-menu-item:hover {
+    background-color: #f5b573;
+}
+.item-after-click {
+    background-color: #f5b573;
 }
