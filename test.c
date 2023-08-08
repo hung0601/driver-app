@@ -31,8 +31,10 @@ int main()
     // Toggle the LED 10 times
     for (int i = 0; i < 10; i++) {
         *(gpio + 7) = 1 << GPIO_OUTPUT_PIN; // Turn on the LED
+        printf("LED ON\n");
         sleep(1);
         *(gpio + 10) = 1 << GPIO_OUTPUT_PIN; // Turn off the LED
+        printf("LED OFF\n");
         sleep(1);
     }
     
